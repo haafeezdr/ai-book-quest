@@ -8,47 +8,73 @@ export default function ByLastReads({loading, setLoading, setSuggestions, url}) 
 
 	const handleSubmit = async (event) => {
 		event.preventDefault(); // Prevent form submission and page reload
-		setLoading(true)
-
-		// get each title in an array
-		let titles = [...Array(titlesCount).keys()].map(i => (
-			event.target.elements[`title${i + 1}`].value
-		))
-
-		// remove empty items
-		titles = titles.filter(Boolean)
-
+		setLoading(true);
+	
+		// Get search type and titles
+		const searchType = event.target.elements["search-type"].value;
+		const titles = Array.from({ length: titlesCount }, (_, i) => {
+			return event.target.elements[`title${i + 1}`].value.trim();
+		}).filter(Boolean);
+	
+		// Validate inputs
+		if (!searchType) {
+			toast.error("Please select a search type");
+			setLoading(false);
+			return;
+		}
+	
 		if (titles.length === 0) {
-			toast.error('At least one title is required')
-			setLoading(false)
-			return
+			toast.error("Please provide at least one title");
+			setLoading(false);
+			return;
 		}
-
+	
 		const data = {
-			searchType: event.target.elements["search-type"].value,
-			titles: titles.join(", ")
-		}
-
-		let response = await fetch(url, {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				"Content-type": "application/json"
+			searchType,
+			titles: titles.join(", "),
+		};
+	
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+	
+			if (!response.ok) {
+				throw new Error("Failed to fetch data");
 			}
-		})
-
-		if (response.ok) {
-			response = await response.json()
-			const details = await getGoogleBooksInfo(response.result)
-			setSuggestions(details)
-			setLoading(false)
-			toast.success("Suggestions generated!")
-		} else {
-			response = await response.json()
-			console.error('error')
-			setLoading(false)
-			toast.error(response.error.message)
+	
+			const responseData = await response.json();
+			const details = await getGoogleBooksInfo(responseData.result);
+			setSuggestions(details);
+			setLoading(false);
+			toast.success("Suggestions generated!");
+		} catch (error) {
+			console.error("Error:", error);
+			setLoading(false);
+			toast.error("An unexpected error occurred");
 		}
+
+		// if (!response.ok) {
+		// 	const responseBody = await response.json();
+		// 	console.error('Error response:', responseBody);
+		// 	setLoading(false);
+		// 	if (responseBody.error && responseBody.error.message) {
+		// 	  toast.error(responseBody.error.message);
+		// 	} else {
+		// 	  toast.error('An unexpected error occurred');
+		// 	}
+		//   } else {
+		// 	const responseBody = await response.json();
+		// 	const details = await getGoogleBooksInfo(responseBody.result);
+		// 	setSuggestions(details);
+		// 	setLoading(false);
+		// 	toast.success('Suggestions generated!');
+		//   }
+		  
 	};
 	return (
 		<form
