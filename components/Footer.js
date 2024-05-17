@@ -10,7 +10,7 @@ export default function Footer() {
 				target={'_blank'}
 				rel={'noopener noreferrer'}
 			>
-				Haafeez ali
+				KAMAL ONAWO
 			</Link>
 		</div>
 	)
