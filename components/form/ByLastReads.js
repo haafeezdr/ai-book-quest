@@ -37,10 +37,10 @@ export default function ByLastReads({loading, setLoading, setSuggestions, url}) 
 		try {
 			const response = await fetch(url, {
 				method: "POST",
-				body: JSON.stringify(data),
 				headers: {
 					"Content-Type": "application/json",
 				},
+				body: JSON.stringify(data),
 			});
 	
 			if (!response.ok) {
@@ -52,6 +52,7 @@ export default function ByLastReads({loading, setLoading, setSuggestions, url}) 
 			setSuggestions(details);
 			setLoading(false);
 			toast.success("Suggestions generated!");
+			console.log(responseData)
 		} catch (error) {
 			console.error("Error:", error);
 			setLoading(false);

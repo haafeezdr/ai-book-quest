@@ -1,20 +1,22 @@
-import {Configuration, OpenAIApi} from "openai"
+import OpenAI from "openai";
+import dotenv from "dotenv";
 
-const configuration = new Configuration({
+dotenv.config()
+
+const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 });
-
-const openai = new OpenAIApi(configuration);
 
 const OPEN_AI_CHAT_COMPLETION_MODEL = "gpt-3.5-turbo"
 
 export const getCompletion = async (prompt) => {
-	const completion = await openai.createChatCompletion({
+	const completion = await openai.completions.create({
 		model: OPEN_AI_CHAT_COMPLETION_MODEL,
 		messages: [{role: "user", content: prompt}],
 		max_tokens: 2000,
 		temperature: 0.7
 	});
+	console.log(completion);
 	return JSON.parse(completion.data.choices[0].message.content)
 }
 
