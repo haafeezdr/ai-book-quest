@@ -11,8 +11,9 @@
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "autoprefixer": "10.4.14",
-    "next": "13.4.9",
-    "openai": "^3.3.0",
+    "dotenv": "^16.4.5",
+    "next": "^13.5.6",
+    "openai": "^4.47.1",
     "postcss": "8.4.25",
     "react": "18.2.0",
     "react-dom": "18.2.0",
