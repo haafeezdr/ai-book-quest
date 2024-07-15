@@ -9,6 +9,7 @@ export default function Footer() {
 				href={"https://www.haafeez.vercel.app"}
 				target={'_blank'}
 				rel={'noopener noreferrer'}
+				crossOrigin="true" 
 			>
 				KAMAL ONAWO
 			</Link>

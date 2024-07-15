@@ -1,24 +1,28 @@
-import OpenAI from "openai";
+import { Configuration, OpenAIApi } from "openai";
 import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-const OPEN_AI_CHAT_COMPLETION_MODEL = "gpt-3.5-turbo"
+const openai = new OpenAIApi(configuration);
+
+const OPEN_AI_CHAT_COMPLETION_MODEL = "gpt-3.5-turbo";
 
 export const getCompletion = async (prompt) => {
-	const completion = await openai.completions.create({
-		model: OPEN_AI_CHAT_COMPLETION_MODEL,
-		messages: [{role: "user", content: prompt}],
-		max_tokens: 2000,
-		temperature: 0.7
-	});
-	console.log(completion);
-	return JSON.parse(completion.data.choices[0].message.content)
-}
+  const completion = await openai.createChatCompletion({
+    model: OPEN_AI_CHAT_COMPLETION_MODEL,
+    messages: [{ role: "user", content: prompt }],
+    max_tokens: 2000,
+    temperature: 0.7,
+  });
+  console.log(completion);
+  return JSON.parse(completion.data.choices[0].message.content);
+};
+
+
 
 
 // const OPEN_AI_COMPLETION_MODEL = "text-davinci-003"
